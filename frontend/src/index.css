@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: 'Open Sans', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+}
+
+@media (min-width: 1250px){
+  .css-17fpwt7-MuiGrid-root{
+    min-width: 48% !important;
+  }
+  .input{
+    width: 98%;
+  }
+}

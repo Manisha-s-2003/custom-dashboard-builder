@@ -7,16 +7,19 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.11",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "npm run dev --prefix backend",
+    "frontend": "npm start --prefix frontend",
+    "setup": "npm run install:all && npm start"
   },
   "eslintConfig": {
     "extends": [
