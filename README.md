@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+## Setup Instructions (manual set up)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1. Backend Setup (Required)
 
-## Available Scripts
+Before running the frontend, ensure the backend is running:
 
-In the project directory, you can run:
+```bash
+# In a separate terminal, navigate to backend directory
+cd ../backend
 
-### `npm start`
+# Install backend dependencies
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Configure backend .env file
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Configure environment variables:
 
-### `npm test`
+- Ceate `.env` file and update the values if needed
+- Default MongoDB URI: `mongodb://localhost:27017/orderdb`
+- Default PORT: `4000`. You may create unique port number like 4397.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Environment Variables Example
 
-### `npm run build`
+| Variable    | Description        | Default Value           |
+| ----------- | ------------------ | ----------------------- |
+| PORT        | Server port        | 4000                    |
+| NODE_ENV    | Environment        | development             |
+| MONGODB_URI | MongoDB connection | mongodb://              |
+|             | string             | localhost:27017/orderdb |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Start the backend server
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm run dev
+```
 
-### `npm run eject`
+The backend should be running on `http://localhost:4397`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Frontend Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+````bash
+# Install frontend dependencies
+npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Configure frontend environment
+Create a `.env` file in the frontend root directory with the following variables:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```env
+# API Configuration (Required)
+REACT_APP_API_URL=http://localhost:4397/api
 
-## Learn More
+# Development Server Configuration (Required)
+PORT=3009
+````
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Optional Environment Variables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```env
+# Theme Configuration
+REACT_APP_PRIMARY_COLOR=#54bd95
+REACT_APP_SECONDARY_COLOR=#f44336
+```
 
-### Code Splitting
+### Environment Variables Reference
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Variable                    | Description           | Default Value               | Required |
+| --------------------------- | --------------------- | --------------------------- | -------- |
+| `REACT_APP_API_  URL`       | Backend API           | `http://localhost:4397/api` | ✅ Yes   |
+|                             | base URL              |                             |          |
+| `PORT`                      | Frontend development  | `3009`                      | ✅ Yes   |
+|                             | server port           |                             |          |
+| `REACT_APP_PRIMARY_COLOR`   | Primary theme color   | `#54bd95`                   | ❌ No    |
+| `REACT_APP_SECONDARY_COLOR` | Secondary theme color | `#f44336`                   | ❌ No    |
 
-### Analyzing the Bundle Size
+# Start the frontend development server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm start
+```
 
-### Making a Progressive Web App
+### 3. Verify Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. **Backend Health Check**: Visit `http://localhost:4397/api/health`
+2. **Frontend Application**: Visit `http://localhost:3009`
+3. **API Connection**: Check browser console for any API errors
 
-### Advanced Configuration
+## Setup Instructions (command line)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 1. Clone the project into folder
 
-### Deployment
+````bash
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+git clone https://github.com/Manisha-s-2003/custom-dashboard-builder
 
-### `npm run build` fails to minify
+### 2. Install the dependency in root Project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+
+cd custom-dashboard-builder
+npm install
+
+### 3. Set up backend and frontend dependency and start application
+
+```bash
+
+npm run setup
+````
+
+The application should be running on the `http://localhost:4397`
