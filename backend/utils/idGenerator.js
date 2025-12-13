@@ -28,18 +28,18 @@ exports.generateOrderId = async () => {
 // Generate sequential customer ID in format CUST-0001
 exports.generateCustomerId = async () => {
   try {
-    // Find the last order with customer data by sorting in descending order
+    // Find the last order with the highest customer ID by sorting in descending order
     const lastOrder = await Order.findOne({
-      "customer.customerId": { $exists: true },
+      customerId: { $exists: true, $regex: /^CUST-\d+$/ },
     })
-      .sort({ "customer.customerId": -1 })
-      .select("customer.customerId");
+      .sort({ customerId: -1 })
+      .select("customerId");
 
     let nextNumber = 1;
 
-    if (lastOrder && lastOrder.customer && lastOrder.customer.customerId) {
+    if (lastOrder && lastOrder.customerId) {
       // Extract the number from the last customer ID (e.g., "CUST-0001" -> 1)
-      const lastNumber = parseInt(lastOrder.customer.customerId.split("-")[1]);
+      const lastNumber = parseInt(lastOrder.customerId.split("-")[1]);
       nextNumber = lastNumber + 1;
     }
 

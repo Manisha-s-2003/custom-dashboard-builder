@@ -11,6 +11,7 @@ import {
   InputLabel,
   IconButton,
   Chip,
+  FormHelperText,
 } from "@mui/material";
 import { X, Plus } from "lucide-react";
 import { Button } from "../Button";
@@ -29,30 +30,52 @@ import {
 
 function WidgetConfigPanel({ widget, onSave, onClose }) {
   const [activeTab, setActiveTab] = useState(0);
-  const [config, setConfig] = useState({
-    title: "Untitled",
-    description: "",
-    width: 2,
-    height: 2,
-    ...widget,
-    config: widget?.config || {},
+  const [config, setConfig] = useState(() => {
+    const defaultConfig = widget?.config || {};
+    
+    // Set default values for KPI widgets
+    if (widget?.type === "kpi" && !defaultConfig.dataFormat) {
+      defaultConfig.dataFormat = "Number";
+    }
+    
+    return {
+      title: "Untitled",
+      description: "",
+      width: 2,
+      height: 2,
+      ...widget,
+      config: defaultConfig,
+    };
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (widget) {
+      const defaultConfig = widget.config || {};
+      
+      // Set default values for KPI widgets
+      if (widget.type === "kpi" && !defaultConfig.dataFormat) {
+        defaultConfig.dataFormat = "Number";
+      }
+      
       setConfig({
         title: "Untitled",
         description: "",
         width: 2,
         height: 2,
         ...widget,
-        config: widget.config || {},
+        config: defaultConfig,
       });
+      setErrors({}); // Clear errors when widget changes
     }
   }, [widget]);
 
   const handleChange = (field, value) => {
     setConfig((prev) => ({ ...prev, [field]: value }));
+    // Clear error when field is filled
+    if (errors[field] && value?.trim()) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
   };
 
   const handleConfigChange = (field, value) => {
@@ -60,10 +83,62 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
       ...prev,
       config: { ...prev.config, [field]: value },
     }));
+    // Clear error when field is filled
+    if (errors[field] && value) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Basic validation
+    if (!config.title?.trim()) {
+      newErrors.title = "Widget title is required";
+    }
+
+    // Widget-specific validation
+    if (widget.type === "kpi") {
+      if (!config.config.metric) {
+        newErrors.metric = "Please select a metric";
+      }
+      if (numericFields.includes(config.config.metric) && !config.config.aggregation) {
+        newErrors.aggregation = "Please select an aggregation";
+      }
+      if (!config.config.dataFormat || config.config.dataFormat === "") {
+        newErrors.dataFormat = "Please select a data format";
+      }
+    }
+
+    if (["bar", "line", "area", "scatter"].includes(widget.type)) {
+      if (!config.config.xAxis) {
+        newErrors.xAxis = "Please select X-Axis data";
+      }
+      if (!config.config.yAxis) {
+        newErrors.yAxis = "Please select Y-Axis data";
+      }
+    }
+
+    if (widget.type === "pie") {
+      if (!config.config.chartData) {
+        newErrors.chartData = "Please select chart data";
+      }
+    }
+
+    if (widget.type === "table") {
+      if (!config.config.columns || config.config.columns.length === 0) {
+        newErrors.columns = "Please select at least one column";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSave = () => {
-    onSave(config);
+    if (validateForm()) {
+      onSave(config);
+    }
   };
 
   const handleTabChange = (tabIndex) => {
@@ -199,19 +274,23 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
             <TextField
               fullWidth
               size="small"
-              label="Widget title *"
+              label="Widget title"
               value={config.title}
               onChange={(e) => handleChange("title", e.target.value)}
               sx={{ mb: 2.5 }}
+              required
+              error={!!errors.title}
+              helperText={errors.title}
             />
 
             <TextField
               fullWidth
               size="small"
-              label="Widget type *"
+              label="Widget type"
               value={widget.type.charAt(0).toUpperCase() + widget.type.slice(1)}
               slotProps={{ input: { readOnly: true } }}
               sx={{ mb: 2.5, bgcolor: "#f5f5f5" }}
+              required
             />
 
             <TextField
@@ -235,7 +314,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
             <TextField
               fullWidth
               size="small"
-              label="Width (Columns) *"
+              label="Width (Columns)"
               type="number"
               value={config.width}
               onChange={(e) =>
@@ -246,12 +325,13 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
               }
               slotProps={{ htmlInput: { min: 1 } }}
               sx={{ mb: 2 }}
+              required
             />
 
             <TextField
               fullWidth
               size="small"
-              label="Height (Rows) *"
+              label="Height (Rows)"
               type="number"
               value={config.height}
               onChange={(e) =>
@@ -262,6 +342,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
               }
               slotProps={{ htmlInput: { min: 1 } }}
               sx={{ mb: 3 }}
+              required
             />
 
             <Typography
@@ -273,13 +354,14 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "kpi" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.metric}>
                   <InputLabel id="select-metric-label">
                     Select metric *
                   </InputLabel>
                   <Select
                     labelId="select-metric-label"
-                    label="Select metric *"
+                    label="Select metric"
+                    required
                     value={config.config.metric || ""}
                     onChange={(e) =>
                       handleConfigChange("metric", e.target.value)
@@ -291,6 +373,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.metric && <FormHelperText>{errors.metric}</FormHelperText>}
                 </FormControl>
 
                 <FormControl
@@ -298,6 +381,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                   size="small"
                   sx={{ mb: 2 }}
                   disabled={!numericFields.includes(config.config.metric)}
+                  error={!!errors.aggregation}
                 >
                   <InputLabel id="aggregation-label">Aggregation *</InputLabel>
                   <Select
@@ -314,14 +398,15 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.aggregation && <FormHelperText>{errors.aggregation}</FormHelperText>}
                 </FormControl>
 
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.dataFormat}>
                   <InputLabel id="data-format-label">Data format *</InputLabel>
                   <Select
                     labelId="data-format-label"
                     label="Data format *"
-                    value={config.config.dataFormat || ""}
+                    value={config.config.dataFormat || "Number"}
                     onChange={(e) =>
                       handleConfigChange("dataFormat", e.target.value)
                     }
@@ -332,6 +417,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.dataFormat && <FormHelperText>{errors.dataFormat}</FormHelperText>}
                 </FormControl>
 
                 <TextField
@@ -354,13 +440,14 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {["bar", "line", "area", "scatter"].includes(widget.type) && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.xAxis}>
                   <InputLabel id="x-axis-label">
                     Choose X-Axis data *
                   </InputLabel>
                   <Select
                     labelId="x-axis-label"
-                    label="Choose X-Axis data *"
+                    label="Choose X-Axis data"
+                    required
                     value={config.config.xAxis || ""}
                     onChange={(e) =>
                       handleConfigChange("xAxis", e.target.value)
@@ -372,15 +459,17 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.xAxis && <FormHelperText>{errors.xAxis}</FormHelperText>}
                 </FormControl>
 
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.yAxis}>
                   <InputLabel id="y-axis-label">
                     Choose Y-Axis data *
                   </InputLabel>
                   <Select
                     labelId="y-axis-label"
-                    label="Choose Y-Axis data *"
+                    label="Choose Y-Axis data"
+                    required
                     value={config.config.yAxis || ""}
                     onChange={(e) =>
                       handleConfigChange("yAxis", e.target.value)
@@ -392,6 +481,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.yAxis && <FormHelperText>{errors.yAxis}</FormHelperText>}
                 </FormControl>
 
                 <FormControlLabel
@@ -413,13 +503,14 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "pie" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.chartData}>
                   <InputLabel id="chart-data-label">
                     Choose chart data *
                   </InputLabel>
                   <Select
                     labelId="chart-data-label"
-                    label="Choose chart data *"
+                    label="Choose chart data"
+                    required
                     value={config.config.chartData || ""}
                     onChange={(e) =>
                       handleConfigChange("chartData", e.target.value)
@@ -438,6 +529,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.chartData && <FormHelperText>{errors.chartData}</FormHelperText>}
                 </FormControl>
 
                 <FormControlLabel
@@ -461,12 +553,13 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "table" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.columns}>
                   <InputLabel id="choose-columns-label">
                     Choose columns *
                   </InputLabel>
                   <Select
                     multiple
+                    required
                     labelId="choose-columns-label"
                     label="Choose columns *"
                     value={config.config.columns || []}
@@ -520,6 +613,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
+                  {errors.columns && <FormHelperText>{errors.columns}</FormHelperText>}
                 </FormControl>
 
                 <FormControl fullWidth size="small" sx={{ mb: 2 }}>
@@ -737,6 +831,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                 <TextField
                   size="small"
                   type="number"
+                  required
                   value={config.config.fontSize || fontSizeRange.default}
                   onChange={(e) => {
                     const val =
@@ -808,7 +903,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                   sx={{
                     width: 50,
                     height: 40,
-                    bgcolor: config.config.headerBg || "#D8D8D8",
+                    bgcolor: config.config.headerBg || "#54BD95",
                     cursor: "pointer",
                     position: "relative",
                     display: "flex",
@@ -819,7 +914,7 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                 >
                   <input
                     type="color"
-                    value={config.config.headerBg || "#D8D8D8"}
+                    value={config.config.headerBg || "#54BD95"}
                     onChange={(e) =>
                       handleConfigChange("headerBg", e.target.value)
                     }
@@ -841,11 +936,11 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                 </Box>
                 <TextField
                   size="small"
-                  value={config.config.headerBg || "#D8D8D8"}
+                  value={config.config.headerBg || "#54BD95"}
                   onChange={(e) =>
                     handleConfigChange("headerBg", e.target.value)
                   }
-                  placeholder="#D8D8D8"
+                  placeholder="#54BD95"
                   slotProps={{
                     input: {
                       sx: { border: "none", "& fieldset": { border: "none" } },

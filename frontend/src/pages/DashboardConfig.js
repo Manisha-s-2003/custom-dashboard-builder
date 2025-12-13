@@ -200,7 +200,7 @@ function DashboardConfig() {
         open={deleteConfirm}
         onCancel={cancelDelete}
         onConfirm={confirmDelete}
-        title="Delete Widget"
+        title="Delete"
         message={
           <>
             Are you sure you want to delete the{" "}

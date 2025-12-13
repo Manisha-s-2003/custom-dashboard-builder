@@ -11,9 +11,6 @@ function KPIWidget({ widget, filteredOrders }) {
         <Typography variant="h3" sx={{ color: "#ccc", fontWeight: 600 }}>
           0
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Metric Value
-        </Typography>
       </Box>
     );
   }

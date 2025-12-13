@@ -21,8 +21,8 @@ function ChartWidget({ widget, filteredOrders }) {
   const themeColors = getThemeColors();
   const { xAxis, yAxis } = widget.config || {};
   const color = widget.config?.chartColor || themeColors.primary;
-  const width = (widget?.width || 4) * 80;
-  const height = (widget?.height || 3) * 80;
+  const width = (widget?.width || 4) * 120;
+  const height = (widget?.height || 3) * 100;
 
   // Check if Y-axis is numeric (same logic as in getChartData)
   const isYAxisNumeric = [
@@ -164,7 +164,7 @@ function ChartWidget({ widget, filteredOrders }) {
             <YAxis
               label={{
                 value: !isYAxisNumeric
-                  ? `Count of ${yAxis}`
+                  ? `Count of ${yAxis || "Y-Axis"}`
                   : yAxis || "Y-Axis",
                 angle: -90,
                 position: "insideLeft",
@@ -221,7 +221,7 @@ function ChartWidget({ widget, filteredOrders }) {
             <YAxis
               label={{
                 value: !isYAxisNumeric
-                  ? `Count of ${yAxis}`
+                  ? `Count of ${yAxis || "Y-Axis"}`
                   : yAxis || "Y-Axis",
                 angle: -90,
                 position: "insideLeft",
@@ -278,7 +278,7 @@ function ChartWidget({ widget, filteredOrders }) {
             <YAxis
               label={{
                 value: !isYAxisNumeric
-                  ? `Count of ${yAxis}`
+                  ? `Count of ${yAxis || "Y-Axis"}`
                   : yAxis || "Y-Axis",
                 angle: -90,
                 position: "insideLeft",
@@ -331,7 +331,7 @@ function ChartWidget({ widget, filteredOrders }) {
               dataKey="value"
               label={{
                 value: !isYAxisNumeric
-                  ? `Count of ${yAxis}`
+                  ? `Count of ${yAxis || "Y-Axis"}`
                   : yAxis || "Y-Axis",
                 angle: -90,
                 position: "insideLeft",
