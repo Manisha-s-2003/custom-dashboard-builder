@@ -107,34 +107,6 @@ const orderService = {
       };
     }
   },
-
-  // Validate order data before submission
-  validateOrderData: (orderData) => {
-    const errors = {};
-
-    if (!orderData.customer?.name) {
-      errors.customerName = "Customer name is required";
-    }
-
-    if (!orderData.customer?.email) {
-      errors.customerEmail = "Customer email is required";
-    } else if (!/\S+@\S+\.\S+/.test(orderData.customer.email)) {
-      errors.customerEmail = "Invalid email format";
-    }
-
-    if (!orderData.items || orderData.items.length === 0) {
-      errors.items = "At least one item is required";
-    }
-
-    if (!orderData.paymentMethod) {
-      errors.paymentMethod = "Payment method is required";
-    }
-
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors,
-    };
-  },
 };
 
 export default orderService;

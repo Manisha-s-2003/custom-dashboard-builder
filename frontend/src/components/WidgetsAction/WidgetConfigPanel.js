@@ -32,12 +32,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
   const [activeTab, setActiveTab] = useState(0);
   const [config, setConfig] = useState(() => {
     const defaultConfig = widget?.config || {};
-    
+
     // Set default values for KPI widgets
     if (widget?.type === "kpi" && !defaultConfig.dataFormat) {
       defaultConfig.dataFormat = "Number";
     }
-    
+
     return {
       title: "Untitled",
       description: "",
@@ -52,12 +52,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
   useEffect(() => {
     if (widget) {
       const defaultConfig = widget.config || {};
-      
+
       // Set default values for KPI widgets
       if (widget.type === "kpi" && !defaultConfig.dataFormat) {
         defaultConfig.dataFormat = "Number";
       }
-      
+
       setConfig({
         title: "Untitled",
         description: "",
@@ -102,7 +102,10 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
       if (!config.config.metric) {
         newErrors.metric = "Please select a metric";
       }
-      if (numericFields.includes(config.config.metric) && !config.config.aggregation) {
+      if (
+        numericFields.includes(config.config.metric) &&
+        !config.config.aggregation
+      ) {
         newErrors.aggregation = "Please select an aggregation";
       }
       if (!config.config.dataFormat || config.config.dataFormat === "") {
@@ -354,7 +357,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "kpi" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.metric}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.metric}
+                >
                   <InputLabel id="select-metric-label">
                     Select metric *
                   </InputLabel>
@@ -373,7 +381,9 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.metric && <FormHelperText>{errors.metric}</FormHelperText>}
+                  {errors.metric && (
+                    <FormHelperText>{errors.metric}</FormHelperText>
+                  )}
                 </FormControl>
 
                 <FormControl
@@ -398,10 +408,17 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.aggregation && <FormHelperText>{errors.aggregation}</FormHelperText>}
+                  {errors.aggregation && (
+                    <FormHelperText>{errors.aggregation}</FormHelperText>
+                  )}
                 </FormControl>
 
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.dataFormat}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.dataFormat}
+                >
                   <InputLabel id="data-format-label">Data format *</InputLabel>
                   <Select
                     labelId="data-format-label"
@@ -417,7 +434,9 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.dataFormat && <FormHelperText>{errors.dataFormat}</FormHelperText>}
+                  {errors.dataFormat && (
+                    <FormHelperText>{errors.dataFormat}</FormHelperText>
+                  )}
                 </FormControl>
 
                 <TextField
@@ -440,7 +459,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {["bar", "line", "area", "scatter"].includes(widget.type) && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.xAxis}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.xAxis}
+                >
                   <InputLabel id="x-axis-label">
                     Choose X-Axis data *
                   </InputLabel>
@@ -459,10 +483,17 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.xAxis && <FormHelperText>{errors.xAxis}</FormHelperText>}
+                  {errors.xAxis && (
+                    <FormHelperText>{errors.xAxis}</FormHelperText>
+                  )}
                 </FormControl>
 
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.yAxis}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.yAxis}
+                >
                   <InputLabel id="y-axis-label">
                     Choose Y-Axis data *
                   </InputLabel>
@@ -481,7 +512,9 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.yAxis && <FormHelperText>{errors.yAxis}</FormHelperText>}
+                  {errors.yAxis && (
+                    <FormHelperText>{errors.yAxis}</FormHelperText>
+                  )}
                 </FormControl>
 
                 <FormControlLabel
@@ -503,7 +536,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "pie" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.chartData}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.chartData}
+                >
                   <InputLabel id="chart-data-label">
                     Choose chart data *
                   </InputLabel>
@@ -529,7 +567,9 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.chartData && <FormHelperText>{errors.chartData}</FormHelperText>}
+                  {errors.chartData && (
+                    <FormHelperText>{errors.chartData}</FormHelperText>
+                  )}
                 </FormControl>
 
                 <FormControlLabel
@@ -553,7 +593,12 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
 
             {widget.type === "table" && (
               <>
-                <FormControl fullWidth size="small" sx={{ mb: 2 }} error={!!errors.columns}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                  error={!!errors.columns}
+                >
                   <InputLabel id="choose-columns-label">
                     Choose columns *
                   </InputLabel>
@@ -613,7 +658,9 @@ function WidgetConfigPanel({ widget, onSave, onClose }) {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.columns && <FormHelperText>{errors.columns}</FormHelperText>}
+                  {errors.columns && (
+                    <FormHelperText>{errors.columns}</FormHelperText>
+                  )}
                 </FormControl>
 
                 <FormControl fullWidth size="small" sx={{ mb: 2 }}>
