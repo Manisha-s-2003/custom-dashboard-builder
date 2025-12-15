@@ -25,9 +25,6 @@ IF NOT EXIST node_modules (
     echo BACKEND dependencies already installed. Skipping...
 )
 
-echo Starting BACKEND server...
-start cmd /k "npm start"
-
 REM ===== FRONTEND =====
 cd ../frontend
 echo.
@@ -40,7 +37,12 @@ IF NOT EXIST node_modules (
     echo FRONTEND dependencies already installed. Skipping...
 )
 
+echo Starting BACKEND server...
+cd ../backend
+start cmd /k "npm start"
+
 echo Starting FRONTEND app...
+cd ../frontend
 start cmd /k "npm start"
 
 echo.

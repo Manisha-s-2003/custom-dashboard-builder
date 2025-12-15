@@ -1,9 +1,14 @@
+You must add the .env file before starting the project.
+Copy .env.example to .env and modify the variables based on your local environment.
+
 ## Quick Start (Windows)
 
 1. Clone the repository
 2. Copy `.env.example` to `.env` in both the **backend** and **frontend** folders
-3. Double-click `start-project.bat`
-4. Backend & Frontend will start automatically
+3. Double-click `start-project.bat`. The ROOT directory dependency will installed.
+4. For Install Backend dependency, again Double-click `start-project.bat`.
+5. For Install Frontend dependency, again Double-click `start-project.bat`
+6. Atlast Again Doulbe-click `start-project.bat`. Backend & Frontend will start automatically
 
 > The script installs dependencies only if missing.
 
