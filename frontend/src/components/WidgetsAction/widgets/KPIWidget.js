@@ -38,7 +38,7 @@ function KPIWidget({ widget, filteredOrders }) {
 
   const formatted =
     dataFormat === "Currency"
-      ? `${value.toFixed(decimalPrecision || 0)}`
+      ? `$${value.toFixed(decimalPrecision || 0)}`
       : value.toFixed(decimalPrecision || 0);
 
   return (
